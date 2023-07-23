@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-api
+  namespace: account
+  labels:
+    app: account-api
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: account-api
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: account-api
+        version: v1
+    spec:
+      serviceAccountName: account-api
+      containers:
+        - name: account-api
+          image: lucasgsousa/apps-banking-account:v1
+          env:
+            - name: DATABASE_HOST
+              value: account-db.account
+            - name: DATABASE_PASSWORD
+              value: postgres
+            - name: BANKING_AUTH_URL
+              value: http://auth-api.auth
+            - name: BANKING_LEDGER_URL
+              value: http://ledger-api.ledger
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          securityContext:
+            runAsUser: 1000

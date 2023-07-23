@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-db
+  namespace: account
+spec:
+  selector:
+    matchLabels:
+      app: account-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: account-db
+    spec:
+      serviceAccountName: account-db
+      containers:
+        - name: account-db
+          image: postgres:14.8
+          env:
+            - name: POSTGRES_PASSWORD
+              value: postgres
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: account-persistence-volume
+      volumes:
+        - name: account-persistence-volume
+          persistentVolumeClaim:
+            claimName: account-db-persistence-volume-claim
