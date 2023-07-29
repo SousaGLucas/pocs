@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ledger-api
+  namespace: ledger
+  labels:
+    app: ledger-api
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ledger-api
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: ledger-api
+        version: v1
+    spec:
+      serviceAccountName: ledger-api
+      containers:
+        - name: ledger-api
+          image: lucasgsousa/apps-banking-ledger:v1
+          env:
+            - name: DATABASE_HOST
+              value: ledger-db.ledger
+            - name: DATABASE_PASSWORD
+              value: postgres
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          securityContext:
+            runAsUser: 1000
