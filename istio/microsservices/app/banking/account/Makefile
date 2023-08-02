@@ -44,6 +44,6 @@ api:
 	@kubectl apply -f api_service.yaml
 	@echo "== =="
 
-	@echo "== Creating account virtual service =="
-	@kubectl apply -f api_virtual_service.yaml
+	@echo "== Creating Istio Ingress =="
+	@kubectl apply -f api_ingress.yaml
 	@echo "== =="
